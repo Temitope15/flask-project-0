@@ -22,7 +22,7 @@ def error_response(message, status_code):
 
 
 def validate_password(password):
-    if len(password < 8):
+    if len(password) < 8:
         return "Password must be at least 8 characters long"
     if not re.search(r'[A-Z]', password):
         return "Password must contain at least one upperase letter"
@@ -48,6 +48,7 @@ def validate_user_input(data):
     if data['password'] != data['confirm_password']:
         return "passwords do not match"
     return None
+
 
 # to create a new user
 
