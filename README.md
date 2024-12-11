@@ -38,9 +38,8 @@ flask_project/
 ├── app/
 │   ├── __init__.py         # Initializes the app and sets up the application factory
 │   ├── database.py         # Database setup and ORM integration
-│   ├── models.py           # Defines the database models (e.g., User model)
+│   ├── models.py           # Defines the database models
 │   ├── routes.py           # Contains route definitions for user endpoints
-│   └── validators.py       # Input validation logic
 ├── venv/                   # Virtual environment files
 ├── app.db                  # SQLite database file
 ├── config.py               # Application configuration settings
@@ -62,25 +61,27 @@ flask_project/
 ### **Step 2: Implementing Models**
 
 1. Defined the `User` model with attributes such as `id`, `username`, `email`, and `password`.
-2. Wrote Marshmallow schemas to handle serialization and deserialization of the `User` model.
+2. Wrote Marshmallow schema to handle serialization and deserialization of the `User` model.
 
 ### **Step 3: Building Routes**
 
 - Created API endpoints to:
+
   - **Create a User**:
     - Validates input data.
     - Checks if the user already exists.
     - Hashes the password for security.
     - Adds the user to the database.
   - **Retrieve All Users**:
+
     - Fetches and returns all user data.
-    - Validates if the requestor is authorized.
+
   - **Retrieve a Single User**:
     - Fetches user data by ID via `/users/<id>`.
 
 ### **Step 4: Handling Configurations**
 
-- Used a `config.py` file to store environment variables and settings such as `DEBUG` mode.
+- Used a `config.py` file to store environment variables and settings and deployment config
 
 ### **Step 5: Initializing the Application**
 
@@ -136,7 +137,7 @@ flask_project/
 - **Custom Error Responses**:
   - Returns user-friendly JSON responses with appropriate HTTP status codes.
 
----
+<!-- ---
 
 ## Future Improvements
 
@@ -144,7 +145,7 @@ flask_project/
 2. Implement a frontend to interact with the API.
 3. Use Flask-Migrate for managing database migrations.
 
----
+--- -->
 
 ## How to Run
 
@@ -161,8 +162,4 @@ flask_project/
    ```bash
    python run.py
    ```
-4. Access the API at `http://127.0.0.1:5000/api/v1`.
-
----
-
-This structure provides a clear, professional, and grammatically improved README file for your project. Let me know if you'd like further refinements!
+4. Access the API at `https://flask-project-0.onrender.com/api/v1/users`.
