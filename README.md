@@ -160,6 +160,6 @@ flask_project/
    ```
 3. Run the application:
    ```bash
-   python run.py
+   python3 run.py
    ```
 4. Access the API at `https://flask-project-0.onrender.com/api/v1/users`.

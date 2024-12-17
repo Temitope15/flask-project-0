@@ -103,7 +103,7 @@ def get_users():
 
 
 # to get a specific user
-@user_bp.route('/users/<int:user_id>', methods=['GET'])
+@user_bp.route('/users/<uuid:user_id>', methods=['GET'])
 def get_user(user_id):
     try:
         user = User.query.get_or_404(user_id)

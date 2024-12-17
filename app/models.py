@@ -1,4 +1,5 @@
 # import  db, ma for database and schema
+import uuid
 from app.database import db, ma
 # to get the time stamp when the user creates account
 from datetime import datetime, timezone
@@ -11,7 +12,7 @@ class User(db.Model):
 
     # columns of the table
     # i.e it is the primary key that wil be used to keep tracck the number of users in my database
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
 
     # the username table, is a string that can not be more than 100 characters and it cannot be empty
     username = db.Column(db.String(100), unique=True, nullable=False)
