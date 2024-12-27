@@ -1,4 +1,5 @@
 # import  db, ma for database and schema
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from app.database import db, ma
 # to get the time stamp when the user creates account
@@ -12,7 +13,7 @@ class User(db.Model):
 
     # columns of the table
     # i.e it is the primary key that wil be used to keep tracck the number of users in my database
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     # the username table, is a string that can not be more than 100 characters and it cannot be empty
     username = db.Column(db.String(100), unique=True, nullable=False)
@@ -26,6 +27,12 @@ class User(db.Model):
 
     # its optional to tell me about you
     about = db.Column(db.String, nullable=True)
+
+    #the school you attend
+    school = db.Column(db.String, nullable=False)
+
+    department = db.Column(db.String, nullable=False)
+    heartrob = db.Column(db.String, default='BISOLA', nullable=True)
 
 
 def __repr__(self):

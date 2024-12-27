@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify  # to create the endpoints
 from werkzeug.security import generate_password_hash  # to generate password hash
-
+from functools import wraps
 import validators
 import re
 
@@ -37,7 +37,7 @@ def validate_password(password):
 
 # input validattion helper function
 def validate_user_input(data):
-    if not data.get('username') or not data.get('email') or not data.get('password'):
+    if not data.get('username') or not data.get('email') or not data.get('password') or not data.get('school') or not data.get('department'):
         return "All fields are required"
 
     if not validators.email(data['email']):
@@ -49,6 +49,21 @@ def validate_user_input(data):
         return "passwords do not match"
     return None
 
+#helper function to validate token
+def validate_bearer_token(request):
+    token = request.headers.get('Authorization')
+    if token and token.startswith("Bearer "):
+        return token.split(" ")[1] == "ey_STEPHENGADE_py024"
+    return False
+
+#decorator function
+def token_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not validate_bearer_token(request):
+            return error_response('Invalid or missing token', 403)
+        return f(*args, **kwargs)
+    return decorated_function
 
 # to create a new user
 
@@ -77,7 +92,8 @@ def create_user():
         # to  create a new user
         new_user = User(
             # i  did it this way because it is optional to tell us about yourself, check line 21 in models.py
-            username=data['username'], email=data['email'], password=hashed_password, about=data.get('about', 'No information provided'))
+            username=data['username'], email=data['email'], password=hashed_password, about=data.get('about', 'No information provided'),  school=data['school'], department=data['department'], heartrob=data.get('heartrob', 'BISOLA')
+        )
 
         # This will save the user to the database
         db.session.add(new_user)
@@ -87,23 +103,25 @@ def create_user():
     except Exception as e:
         db.session.rollback()
         return error_response(
-            f'An unexpeted error occured: {str(e)}', 500)
+            f'An unexpected error occured: {str(e)}', 500)
 
 # to get all users
 
 
 @user_bp.route('/users', methods=['GET'])
+@token_required
 def get_users():
     try:
         users = User.query.all()
         return users_schema.jsonify(users), 200
     except Exception as e:
-        error_response(
+        return error_response(
             f'An unexpected error occured: {str(e)}', 500)
 
 
 # to get a specific user
 @user_bp.route('/users/<uuid:user_id>', methods=['GET'])
+@token_required
 def get_user(user_id):
     try:
         user = User.query.get_or_404(user_id)
@@ -111,3 +129,35 @@ def get_user(user_id):
     except Exception as e:
         return error_response(
             f'An unexpected error occured:{str(e)}', 500)
+
+
+# to update the user details
+@user_bp.route('/users/<uuid:user_id>', methods=['PATCH'])
+def update_user(user_id):
+    try:
+        user= User.query.get_or_404(user_id)
+        data = request.get_json()
+
+        user.school = data.get('school', user.school)
+        user.department = data.get('department', user.department)
+        user.about = data.get('about', user.bio)
+        user.heartrob = data.get('heartrob', user.heartrob)
+
+        db.session.commit()
+        return user_schema.jsonify(user), 200
+    except Exception as e:
+        db.session.rollback()
+        return error_response(f'An unexpected error occurred: {str(e)}', 500)
+
+
+@user_bp.route('/users/<uuid:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        user = User.query.get_or_404(user_id)
+        name = User.username
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': f'user {name} ({user_id}) deleted successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return error_response(f'An unexpected error occurred: {str(e)}', 500)
