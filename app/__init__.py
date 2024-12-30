@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_migrate import Migrate
-from app.database import init_db
+from app.database import db,init_db
 from app.routes import user_bp
 from flask_uuid import FlaskUUID
 
@@ -12,7 +12,7 @@ def create_app(config_objects='config.DevelopmentConfig'):
     app.config.from_object(config_objects)
 
     init_db(app)  # to initialize the database
-    migrate = Migrate(app, init_db)
+    migrate = Migrate(app, db)
     FlaskUUID(app)
     # this is to register the blueprints of the user  , it simply adds user_bp to the application, if i have more than one blueprint i can also add it in similar fashion
     # here /api/v1 is used becaus eof versioning and it is considered a best practice

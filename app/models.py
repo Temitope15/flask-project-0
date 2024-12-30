@@ -28,11 +28,11 @@ class User(db.Model):
     # its optional to tell me about you
     about = db.Column(db.String, nullable=True)
 
-    #the school you attend
-    school = db.Column(db.String, nullable=False)
+    # #the school you attend
+    # school = db.Column(db.String, nullable=False)
 
-    department = db.Column(db.String, nullable=False)
-    heartrob = db.Column(db.String, default='BISOLA', nullable=True)
+    # department = db.Column(db.String, nullable=False)
+    # heartrob = db.Column(db.String, default='BISOLA', nullable=True)
 
 
 def __repr__(self):

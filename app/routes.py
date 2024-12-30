@@ -37,7 +37,7 @@ def validate_password(password):
 
 # input validattion helper function
 def validate_user_input(data):
-    if not data.get('username') or not data.get('email') or not data.get('password') or not data.get('school') or not data.get('department'):
+    if not data.get('username') or not data.get('email') or not data.get('password'):
         return "All fields are required"
 
     if not validators.email(data['email']):
@@ -45,8 +45,7 @@ def validate_user_input(data):
     password_error = validate_password(data['password'])
     if password_error:
         return password_error
-    if data['password'] != data['confirm_password']:
-        return "passwords do not match"
+    
     return None
 
 #helper function to validate token
@@ -149,7 +148,7 @@ def update_user(user_id):
         db.session.rollback()
         return error_response(f'An unexpected error occurred: {str(e)}', 500)
 
-
+#to delete user
 @user_bp.route('/users/<uuid:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     try:
